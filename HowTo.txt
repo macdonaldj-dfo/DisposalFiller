@@ -1,0 +1,7 @@
+Install python from the software center, version 3.11+
+
+Open with run.cmd
+
+Instruction provided in application
+
+This application does not modify assets in maximo

@@ -1,0 +1,7 @@
+
+.idea/
+.venv/
+Disposal Filler/
+src/lib
+*.7z
+src/__pycache__
