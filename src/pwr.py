@@ -5,11 +5,11 @@ import os
 
 class PWR:
 
-    path_y = "/src/form_y.pdf"
-    path_n = "/src/form_n.pdf"
+    path_y = r"\src\form_y.pdf"
+    path_n = r"\src\form_n.pdf"
 
     def __init__(self):
-        self.dir = os.path.dirname(os.getcwd())
+        self.dir = os.getcwd()
         self.py = self.dir + PWR.path_y
         self.pn = self.dir + PWR.path_n
         self.reader = None
@@ -73,7 +73,7 @@ class PWR:
             permissions_flag=4294966212,
             algorithm="AES-128"
         )
-        with open(os.getcwd() + "/" + name, "wb") as output:
+        with open(self.dir + "\\" + name, "wb") as output:
             self.writer.write(output)
 
         return True
