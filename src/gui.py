@@ -11,10 +11,10 @@ class App:
 
     label_font = ("Helvetica", 10, "bold")
 
-    def __init__(self):
+    def __init__(self, debug=False):
 
         self.root = tkinter.Tk()
-        self.root.title("Asset Disposal Form Filler v0.2.1")
+        self.root.title("Asset Disposal Form Filler v0.2.2")
         self.root.geometry("1250x750")
         self.root.resizable(0, 0)
         self.text_font = Font(self.root, name="Helvetica", size=12)
@@ -48,10 +48,11 @@ class App:
         self.clear_btn.grid(row=3, column=0, sticky="w")
 
         self.demo_btn = tkinter.Button(self.control_frame, command=self.test, text="Demo Data")
-        self.demo_btn.grid(row=1, column=6, padx=15)
-
         self.toggle_error = tkinter.Button(self.control_frame, command=self.toggle, text="Add Error")
-        #self.toggle_error.grid(row=2, column=6, padx=15)
+
+        if debug:
+            self.demo_btn.grid(row=1, column=6, padx=15)
+            self.toggle_error.grid(row=2, column=6, padx=15)
 
         # --------------Login Area---------------
 
