@@ -28,7 +28,9 @@ class MF:
         self.attributes = dict()
 
     def login(self, username, password):
-
+        """
+        Create a webdriver and log in to maximo webpage.
+        """
         # Create the browser object
         options = webdriver.ChromeOptions()
         options.add_argument("--headless")
@@ -50,6 +52,9 @@ class MF:
         return True
 
     def wait_for_element(self, xpath):
+        """
+        Wait for a given element to load for as long as our timeout. Raise an error if it fails.
+        """
         try:
             element = EC.presence_of_element_located((By.XPATH, xpath))
             return WebDriverWait(self.browser, MF.short_timeout).until(element)
@@ -58,80 +63,77 @@ class MF:
         except Exception as e:
             raise MFException("Unexpected error while waiting for element") from e
 
-    def adv_wait(self, xpath, loaded=False):
+    def wait_for_clickable_element(self, xpath):
+        """
+        Wait for a given element that should be clickable to load
+        """
+        try:
+            element = EC.element_to_be_clickable((By.XPATH, xpath))
+            return WebDriverWait(self.browser, MF.short_timeout).until(element)
+        except TimeoutException:
+            raise MFException(f"Timeout waiting for clickable element: {xpath}")
+        except Exception as e:
+            raise MFException("Unexpected error while waiting for clickable element") from e
 
-        t = [
-            xpath,
-            XPaths.get("NoResults") + "[contains(text(), 'There are no rows to display')]",
-        ]
-
-        if not loaded:
-            t.append(XPaths.get("Loading"))
+    def wait_for_results(self):
+        """
+        Wait for a result or a no result popup
+        """
+        options = (
+            XPaths.get("NoRecordsOK") + "[contains(text(), 'OK')]",
+            XPaths.get("Name")
+        )
 
         element = None
-
         opt = -1
-
+        # Horrible loop until success or failure
         while not element:
-            for i in range(len(t)):
+            for i in range(len(options)):
                 try:
-                    element = self.browser.find_element(By.XPATH, t[i])
-                    print(f"found {t[i]}")
+                    element = self.browser.find_element(By.XPATH, options[i])
                     opt = i
                     break
-                except:
+                except NoSuchElementException:
                     pass
+                except Exception as e:
+                    raise MFException("An unexpected error occurred waiting for results")
 
         if opt == 0:
-            return element
-        elif opt == 1:
-            raise MFExceptionNoResults("No results found during adv search")
-        elif opt == 2:
-            print("Maximo is loading")
-            return self.wait_for_load(xpath)
-        else:
-            raise MFException("An unexpected error occurred during adv search!")
-
-    def wait_for_load(self, xpath):
-        # Loading window exists, so wait for it to go away
-        try:
-            element = EC.presence_of_element_located((By.XPATH, XPaths.get("Loading")))
-            WebDriverWait(self.browser, MF.long_timeout).until_not(element)
-        except TimeoutException:
-            raise MFException("Maximo is taking too long")
-        except Exception as e:
-            raise MFException("An unexpected error occurred") from e
-
-        print("loading box gone, resume search for asset item")
-
-        return self.adv_wait(xpath, loaded=True)
+            # Even though it found the button it isn't immediately clickable
+            self.wait_for_clickable_element(XPaths.get("NoRecordsOK")).click()
+            raise MFExceptionNoResults("No results found for asset")
+        elif opt == -1:
+            raise MFException("An unexpected error occurred waiting for results")
 
     def search_for_asset(self):
+        """
+        Open the advanced search window and enter the details
+        """
+        adv_btn = self.wait_for_element(XPaths.get("AdvButton"))
 
-        assetbox = self.wait_for_element(XPaths.get("AssetBox"))
+        if not adv_btn:
+            raise MFException("Could not find the search button")
 
-        if not assetbox:
-            raise MFException("Could not find the search bar")
+        adv_btn.click()
+        adv_asset_box = self.wait_for_element((XPaths.get("AdvAsset")))
+        if not adv_asset_box:
+            raise MFException("Could not find search box")
 
-        assetbox.clear()
-        assetbox.send_keys(self.current_asset)
-        assetbox.send_keys(Keys.RETURN)
+        adv_asset_box.clear()
+        adv_asset_box.send_keys(self.current_asset)
 
-    def select_asset_result(self):
+        adv_status_box = self.wait_for_element(XPaths.get("AdvStatus"))
+        if not adv_status_box:
+            raise MFException("Could not find the status box")
 
-        assetitem = self.adv_wait(XPaths.get("AssetItem"))
-
-        if not assetitem:
-            raise MFException("Error finding results!")
-
-        try:
-            assetitem.click()
-        except StaleElementReferenceException as e:
-            print("Stale element, reselect")
-            self.select_asset_result()
+        adv_status_box.clear()
+        adv_status_box.send_keys("%")
+        adv_status_box.send_keys(Keys.RETURN)
 
     def collect_attributes(self):
-
+        """
+        Loop through all the desires attributes and grab them from the webpage
+        """
         for term in self.attributes.keys():
             attribute_box = self.wait_for_element(XPaths.get(term))
 
@@ -142,7 +144,9 @@ class MF:
             self.attributes[term] = attribute_box.get_attribute("value")
 
     def return_to_search(self):
-
+        """
+        Return to search from the asset view
+        """
         returnButton = self.wait_for_element(XPaths.get("ReturnButton"))
 
         if not returnButton:
@@ -151,6 +155,9 @@ class MF:
         returnButton.click()
 
     def clear_search(self):
+        """
+        Clear the search results and refresh for good measure
+        """
         clearButton = self.wait_for_element(XPaths.get("ClearButton"))
 
         if not clearButton:
@@ -158,6 +165,7 @@ class MF:
 
         clearButton.click()
 
+        # An alert asking if you want to proceed without saving will pop up, we must accept and move without saving
         self.browser.refresh()
         alert = self.browser.switch_to.alert
         alert.accept()
@@ -165,7 +173,9 @@ class MF:
         time.sleep(0.5)
 
     def get_asset_data(self, assetNum):
-
+        """
+        Perform all search operations to retrieve the asset data
+        """
         self.attributes.clear()
         self.attributes = {
             "Name": "",
@@ -183,15 +193,16 @@ class MF:
         try:
             print("search")
             self.search_for_asset()
-            print("select")
-            self.select_asset_result()
+            print("wait for result")
+            self.wait_for_results()
             print("collect")
             self.collect_attributes()
-            print("reset")
+            print("return")
             self.return_to_search()
+            print("Clear")
+            self.clear_search()
 
         except MFExceptionNoResults as e:
-            self.clear_search()
             return e
         except MFException as e:
             print(e)

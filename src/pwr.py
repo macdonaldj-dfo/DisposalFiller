@@ -12,8 +12,13 @@ class PWR:
         self.dir = os.path.dirname(os.getcwd())
         self.py = self.dir + PWR.path_y
         self.pn = self.dir + PWR.path_n
+        self.reader = None
+        self.writer = None
 
     def convert_dict(self, values):
+        """
+        Convert dictionary values from element xpath to pdf box names
+        """
         new_dict = dict()
 
         for key, value in values.items():
@@ -31,20 +36,24 @@ class PWR:
 
         return new_dict
 
-    def get_date(self):
+    @staticmethod
+    def get_date():
         date = datetime.datetime.now()
-
         return date.strftime("%w-%b-%Y")
 
     def init(self, y=True):
-
+        """
+        Initialize the reader and writer
+        """
         self.reader = PdfReader(self.py if y else self.pn)
         self.writer = PdfWriter()
 
         self.writer.append(self.reader)
 
     def write_values(self, values):
-
+        """
+        Write the data to a pdf
+        """
         self.init(values.get("HazardFree"))
 
         fields = self.convert_dict(values)
@@ -56,6 +65,8 @@ class PWR:
          )
 
         name = str.upper(values.get("Asset Num")) + " Disposal Form.pdf"
+
+        # Original PDF has owner encryption to preserve structure/formatting and it must be reapplied
         self.writer.encrypt(
             user_password="",
             owner_password="ccg",
@@ -67,5 +78,6 @@ class PWR:
 
         return True
 
-    def show_files(self):
+    @staticmethod
+    def show_files():
         os.startfile(os.getcwd())

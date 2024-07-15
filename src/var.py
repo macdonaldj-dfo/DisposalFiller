@@ -34,7 +34,8 @@ XPaths = {
     # "WholeTable": 'id("m6a7dfd2f_tbod-tbd")/tbody[1]'
     "AdvButton": "//*[@id='m68d8715f-tbb_text']",
     "AdvAsset": "//*[@id='md1329a0c-tb']",
-    "AdvStatus": "//*[@id='m4f560faf-tb']"
+    "AdvStatus": "//*[@id='m4f560faf-tb']",
+    "NoRecordsOK": "//*[@id='m88dbf6ce-pb']"
 }
 
 murl = "https://maximo.ccg-gcc.ent.dfo-mpo.ca/maximo/ui/?event=loadapp&value=asset"

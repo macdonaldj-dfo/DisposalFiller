@@ -14,7 +14,7 @@ class App:
     def __init__(self):
 
         self.root = tkinter.Tk()
-        self.root.title("Asset Disposal Form Filler")
+        self.root.title("Asset Disposal Form Filler v0.2.0")
         self.root.geometry("1250x750")
         self.root.resizable(0, 0)
         self.text_font = Font(self.root, name="Helvetica", size=12)
@@ -150,17 +150,19 @@ class App:
             tkinter.messagebox.showinfo("Login", "Please fill in maximo login details")
             return
 
+        search_terms = self.get_search_terms()
+
+        if len(search_terms) == 0:
+            tkinter.messagebox.showerror("No Terms", "No valid search terms found")
+            return
+
         mf = MF()
 
         if not mf.login(self.user_text.get(), self.pass_text.get()):
             tkinter.messagebox.showerror("Login Failure", "Could not log in. Check your username and password")
             return
 
-        search_terms = self.get_search_terms()
 
-        if len(search_terms) == 0:
-            tkinter.messagebox.showerror("No Terms", "No valid search terms found")
-            return
 
         for term in search_terms:
 
