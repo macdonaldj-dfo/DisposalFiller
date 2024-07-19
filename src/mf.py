@@ -5,7 +5,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException, NoSuchElementException, StaleElementReferenceException
-from var import XPaths, murl, Result
+from var import XPaths, maximo_url, Result
 
 
 class MFException(Exception):
@@ -35,7 +35,7 @@ class MF:
         options = webdriver.ChromeOptions()
         options.add_argument("--headless")
         self.browser = webdriver.Chrome(options=options)
-        self.browser.get(murl)
+        self.browser.get(maximo_url)
 
         # Find the credential boxes and submit cred
         user_box = self.browser.find_element(By.NAME, "username")

@@ -2,9 +2,10 @@ import tkinter
 from tkinter.font import Font
 from tkinter import ttk, messagebox
 from mf import MF
-from var import Result, __version__
+from var import Result, __version__, git_url
 from pwr import PWR
 import re
+import updater
 
 
 class App:
@@ -14,7 +15,7 @@ class App:
     def __init__(self, debug=False):
 
         self.root = tkinter.Tk()
-        self.root.title(f"Asset Disposal Form Filler v{__version__}")
+        self.root.title(f"Asset Disposal Form Filler {__version__}")
         self.root.geometry("1250x750")
         self.root.resizable(0, 0)
         self.text_font = Font(self.root, name="Helvetica", size=12)
@@ -163,8 +164,6 @@ class App:
             tkinter.messagebox.showerror("Login Failure", "Could not log in. Check your username and password")
             return
 
-
-
         for term in search_terms:
 
             res = mf.get_asset_data(term)
@@ -235,6 +234,16 @@ class App:
 
         te1.pack()
         te2.pack()
+
+    @staticmethod
+    def check_version():
+        """
+        Check github for an update and nnotify the user if needed
+        """
+        if updater.check_for_update():
+            tkinter.messagebox.showwarning("Update!", "There is an update available. "
+                                                      "Please visit the webpage and download the latest zip."
+                                                      f"\n{git_url}")
 
 
 class InfoPane(tkinter.Frame):

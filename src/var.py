@@ -1,4 +1,4 @@
-__version__ = "0.2.3"
+__version__ = "v0.2.3"
 
 max2pdf = {
     "Description":      "Asset Description",
@@ -40,8 +40,8 @@ XPaths = {
     "NoRecordsOK": "//*[@id='m88dbf6ce-pb']"
 }
 
-murl = "https://maximo.ccg-gcc.ent.dfo-mpo.ca/maximo/ui/?event=loadapp&value=asset"
-
+maximo_url = "https://maximo.ccg-gcc.ent.dfo-mpo.ca/maximo/ui/?event=loadapp&value=asset"
+git_url = "https://api.github.com/repos/macdonaldj-dfo/DisposalFiller/releases/latest"
 
 class Result:
 
