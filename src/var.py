@@ -1,3 +1,5 @@
+__version__ = "0.2.3"
+
 max2pdf = {
     "Description":      "Asset Description",
     "Asset Num":        "Inventory Number (Tag)",

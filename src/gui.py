@@ -2,7 +2,7 @@ import tkinter
 from tkinter.font import Font
 from tkinter import ttk, messagebox
 from mf import MF
-from var import Result
+from var import Result, __version__
 from pwr import PWR
 import re
 
@@ -14,7 +14,7 @@ class App:
     def __init__(self, debug=False):
 
         self.root = tkinter.Tk()
-        self.root.title("Asset Disposal Form Filler v0.2.3")
+        self.root.title(f"Asset Disposal Form Filler v{__version__}")
         self.root.geometry("1250x750")
         self.root.resizable(0, 0)
         self.text_font = Font(self.root, name="Helvetica", size=12)
