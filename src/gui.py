@@ -120,6 +120,8 @@ class App:
         self.err_frame = tkinter.Frame(self.canv_frame,  bg="lightgray", padx=5, pady=5)
         self.err_frame.pack(fill="x", anchor="nw", expand=True)
 
+        self.check_version()
+
         self.root.mainloop()
 
     def _on_mousewheel(self, event):
