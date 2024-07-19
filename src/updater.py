@@ -10,7 +10,7 @@ def check_for_update():
         print("Bad status code from github")
         return False
 
-    latest_version = response.json()['name']
+    latest_version = response.url.split("/").pop()
 
     print(f"Current version: {var.__version__}. Latest version: {latest_version}")
 

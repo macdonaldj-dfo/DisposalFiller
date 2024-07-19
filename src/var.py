@@ -17,8 +17,6 @@ max2pdf = {
     "HazardFree":       "Select Yes or No3"     # '/V'  :   ['Select', 'Yes', 'No']
 }
 
-
-
 XPaths = {
     "AssetBox":     "//*[@id='m6a7dfd2f_tfrow_[C:1]_txt-tb']",
     "AssetItem":    "//*[@id='m6a7dfd2f_tdrow_[C:1]_ttxt-lb[R:0]']",
@@ -41,7 +39,8 @@ XPaths = {
 }
 
 maximo_url = "https://maximo.ccg-gcc.ent.dfo-mpo.ca/maximo/ui/?event=loadapp&value=asset"
-git_url = "https://api.github.com/repos/macdonaldj-dfo/DisposalFiller/releases/latest"
+git_url = "https://github.com/macdonaldj-dfo/DisposalFiller/releases/latest"
+
 
 class Result:
 
@@ -52,6 +51,3 @@ class Result:
         self.SerialNumber = res.get("SerialNumber")
         self.PartNumber = res.get("PartNumber")
         self.Location = res.get("Location")
-
-
-"//*[@id='m68d8715f-tbb_text']"
