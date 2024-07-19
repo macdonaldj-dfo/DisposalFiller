@@ -19,7 +19,7 @@ class MFExceptionNoResults(MFException):
 class MF:
 
     short_timeout = 10
-    long_timeout = 30
+    long_timeout = 90
 
     def __init__(self):
         self.browser = None
@@ -85,8 +85,10 @@ class MF:
         )
 
         element = None
+        stop_time = time.time() + MF.long_timeout
         opt = -1
-        # Horrible loop until success or failure
+
+        # Loop until we find either element or timeout
         while not element:
             for i in range(len(options)):
                 try:
@@ -97,6 +99,9 @@ class MF:
                     pass
                 except Exception as e:
                     raise MFException("An unexpected error occurred waiting for results")
+
+                if time.time() > stop_time:
+                    raise MFException("Timeout while waiting for results!")
 
         if opt == 0:
             # Even though it found the button it isn't immediately clickable

@@ -14,7 +14,7 @@ class App:
     def __init__(self, debug=False):
 
         self.root = tkinter.Tk()
-        self.root.title("Asset Disposal Form Filler v0.2.2")
+        self.root.title("Asset Disposal Form Filler v0.2.3")
         self.root.geometry("1250x750")
         self.root.resizable(0, 0)
         self.text_font = Font(self.root, name="Helvetica", size=12)
