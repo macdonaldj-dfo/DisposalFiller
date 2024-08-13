@@ -6,3 +6,4 @@ src/lib
 *.7z
 src/__pycache__
 /Update Release Files.cmd
+Excel/

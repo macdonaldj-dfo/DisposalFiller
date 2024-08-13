@@ -1,11 +1,10 @@
 import tkinter
 from tkinter.font import Font
 from tkinter import ttk, messagebox
-from mf import MF
-from var import Result, __version__, git_url
+from maximo_api import MaxAPI
+from var import Result, __version__
 from pwr import PWR
 import re
-import updater
 
 
 class App:
@@ -120,8 +119,6 @@ class App:
         self.err_frame = tkinter.Frame(self.canv_frame,  bg="lightgray", padx=5, pady=5)
         self.err_frame.pack(fill="x", anchor="nw", expand=True)
 
-        self.check_version()
-
         self.root.mainloop()
 
     def _on_mousewheel(self, event):
@@ -160,7 +157,7 @@ class App:
             tkinter.messagebox.showerror("No Terms", "No valid search terms found")
             return
 
-        mf = MF()
+        mf = MaxAPI()
 
         if not mf.login(self.user_text.get(), self.pass_text.get()):
             tkinter.messagebox.showerror("Login Failure", "Could not log in. Check your username and password")
@@ -236,16 +233,6 @@ class App:
 
         te1.pack()
         te2.pack()
-
-    @staticmethod
-    def check_version():
-        """
-        Check github for an update and nnotify the user if needed
-        """
-        if updater.check_for_update():
-            tkinter.messagebox.showwarning("Update!", "There is an update available. "
-                                                      "Please visit the webpage and download the latest zip."
-                                                      f"\n{git_url}")
 
 
 class InfoPane(tkinter.Frame):
